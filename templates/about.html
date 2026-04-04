@@ -2,275 +2,360 @@
 
 {% block content %}
 <style>
-    /* --- ABOUT PAGE SPECIFIC STYLES --- */
-    .about-hero {
-        position: relative;
-        background-color: #050505;
-        padding: 120px 0;
-        border-bottom: 2px solid var(--accent-red, #d33c44);
-        overflow: hidden;
-    }
-    
-    .about-hero-bg {
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background-image: url('https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=1920&q=80');
-        background-size: cover;
-        background-position: center;
-        opacity: 0.15;
-        z-index: 1;
-        filter: grayscale(100%);
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Roboto:wght@400;500;700&display=swap');
+
+    :root {
+        --red-accent: #d33c44;
+        --dark-bg: #111;
+        --card-bg: #1a1a1a;
+        --font-heading: 'Montserrat', sans-serif;
+        --font-body: 'Roboto', sans-serif;
     }
 
-    .about-hero-content {
-        position: relative;
-        z-index: 2;
-    }
+    html { scroll-behavior: smooth; }
 
-    .story-image-wrapper {
-        position: relative;
-        border-radius: 12px;
-        overflow: hidden;
-    }
-    
-    .story-image-wrapper img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        min-height: 400px;
-        filter: grayscale(80%) brightness(0.8);
-        transition: 0.5s ease;
-    }
-    
-    .story-image-wrapper:hover img {
-        filter: grayscale(0%) brightness(1);
-        transform: scale(1.05);
-    }
-
-    .story-image-wrapper::after {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
-        box-shadow: inset 0 0 50px rgba(0,0,0,0.8);
-        pointer-events: none;
-    }
-
-    /* Stats Section */
-    .stats-section {
-        background-color: #111;
-        border-top: 1px solid #222;
-        border-bottom: 1px solid #222;
-    }
-    
-    .stat-box {
-        text-align: center;
-        padding: 30px 15px;
-    }
-    
-    .stat-number {
-        font-size: 3.5rem;
-        font-weight: 800;
-        color: var(--accent-red, #d33c44);
-        line-height: 1;
-        margin-bottom: 10px;
-    }
-    
-    .stat-label {
+    body {
+        background-color: var(--dark-bg);
         color: #fff;
-        font-size: 1rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        opacity: 0.8;
+        font-family: var(--font-body);
+        overflow-x: hidden;
     }
 
-    /* Core Values Cards */
-    .value-card {
-        background-color: #151515;
-        border: 1px solid #2a2a2a;
-        border-radius: 12px;
-        padding: 40px 30px;
-        height: 100%;
-        transition: all 0.3s ease;
-    }
-    
-    .value-card:hover {
-        transform: translateY(-10px);
-        border-color: var(--accent-red, #d33c44);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.4);
-        background-color: #1a1a1a;
-    }
-    
-    .value-icon {
-        width: 70px;
-        height: 70px;
-        background-color: rgba(211, 60, 68, 0.1);
-        color: var(--accent-red, #d33c44);
-        border-radius: 50%;
+    /* --- COMMON SECTION HEADERS --- */
+    .section-header { text-align: center; margin-bottom: 3rem; position: relative; z-index: 2; }
+    .section-sub { color: var(--red-accent); font-weight: 700; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 10px; font-size: 0.9rem; }
+    .section-title { font-family: var(--font-heading); color: #fff; font-weight: 900; text-transform: uppercase; font-size: 2.5rem; margin-bottom: 0; }
+
+    /* --- COMMON BACKGROUND OVERLAYS --- */
+    .bg-overlay { position: relative; }
+    .bg-overlay::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.85); z-index: 1; }
+    .bg-overlay > .container { position: relative; z-index: 2; }
+
+    /* --- 1. TOP BAR & HEADER --- */
+    .top-bar { background-color: rgba(0,0,0,0.9); border-bottom: 1px solid rgba(211, 60, 68, 0.3); font-size: 0.8rem; padding: 10px 0; }
+    .main-nav { background: rgba(17, 17, 17, 0.95); padding: 15px 0; position: sticky; top: 0; z-index: 999; border-bottom: 2px solid #333; }
+    .nav-logo { width: 50px; height: 50px; border: 2px solid var(--red-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--red-accent); font-weight: 900; font-size: 1.5rem; }
+    .nav-links a { color: white; text-decoration: none; margin-left: 30px; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; transition: 0.3s; }
+    .nav-links a:hover { color: var(--red-accent); }
+
+    /* --- PAGE HEADER (SHORT HERO) --- */
+    .page-hero {
+        position: relative;
+        background: url('https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=1920&auto=format&fit=crop&q=80') center/cover no-repeat;
+        min-height: 40vh;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 2rem;
-        margin-bottom: 25px;
-        transition: 0.3s ease;
+        text-align: center;
+        border-bottom: 4px solid var(--red-accent);
     }
+    .page-hero::before {
+        content: ''; position: absolute; inset: 0;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(17,17,17,1));
+        z-index: 1;
+    }
+    .page-hero-content { position: relative; z-index: 2; }
+    .page-hero-title { font-family: var(--font-heading); font-size: 3.5rem; font-weight: 900; text-transform: uppercase; text-shadow: 2px 2px 5px rgba(0,0,0,0.8); margin-bottom: 10px; }
+    .breadcrumb-text { font-size: 0.9rem; font-weight: 600; letter-spacing: 2px; color: #ccc; text-transform: uppercase; }
+    .breadcrumb-text span { color: var(--red-accent); }
+
+    /* --- ABOUT / INTRO SECTION --- */
+    .about-page-intro { padding: 80px 0; background-color: var(--dark-bg); }
+    .highlight-text { font-size: 1.2rem; line-height: 1.8; font-weight: 500; border-left: 4px solid var(--red-accent); padding-left: 20px; margin-bottom: 30px; }
     
-    .value-card:hover .value-icon {
-        background-color: var(--accent-red, #d33c44);
-        color: #fff;
+    /* --- BOX CARDS (Vision/Mission) --- */
+    .info-card { background: var(--card-bg); border: 1px solid #333; border-top: 4px solid var(--red-accent); padding: 40px 30px; height: 100%; border-radius: 8px; transition: 0.3s; }
+    .info-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.5); border-color: #555; border-top-color: var(--red-accent); }
+    .info-icon { font-size: 3rem; color: var(--red-accent); margin-bottom: 20px; }
+    .info-title { font-family: var(--font-heading); font-weight: 900; font-size: 1.5rem; text-transform: uppercase; margin-bottom: 15px; }
+
+    /* --- ART OF SERVICES REUSED --- */
+    .art-services { background: url('https://images.unsplash.com/photo-1727893153491-392fd2d1c721?w=1920&auto=format&fit=crop&q=80') center/cover fixed; padding: 80px 0; border-bottom: 2px solid #333; }
+    .art-box { border: 1px solid #444; padding: 30px; text-align: left; position: relative; background: rgba(0,0,0,0.8); height: 100%; transition: 0.3s; border-radius: 8px; border-bottom: 3px solid transparent; backdrop-filter: blur(5px); }
+    .art-box:hover { border-color: #555; border-bottom-color: var(--red-accent); background: rgba(0,0,0,0.95); }
+    .art-icon { position: absolute; bottom: 25px; right: 25px; font-size: 2.5rem; color: #555; transition: 0.3s; }
+    .art-box:hover .art-icon { color: var(--red-accent); }
+
+    /* --- WHY CHOOSE US REUSED --- */
+    .why-us-bg { background: url('https://images.unsplash.com/photo-1727893119356-1702fe921cf9?w=1920&auto=format&fit=crop&q=80') center/cover; padding: 80px 0; border-bottom: 2px solid #333; }
+    .check-list-item { display: flex; align-items: center; margin-bottom: 15px; font-size: 1.1rem; font-weight: 500; background: rgba(26,26,26,0.8); padding: 15px 20px; border-radius: 5px; border-left: 3px solid var(--red-accent); }
+    .check-list-item i { color: var(--red-accent); font-size: 1.5rem; margin-right: 15px; }
+
+    /* --- RESPONSIVE UPDATES --- */
+    @media (max-width: 991px) {
+        .page-hero-title { font-size: 2.5rem; }
+    }
+    @media (max-width: 576px) {
+        .page-hero-title { font-size: 2rem; }
+        .section-title { font-size: 1.8rem; }
     }
 
-    /* CTA Banner */
-    .cta-banner {
-        background: linear-gradient(135deg, #151515 0%, #0a0a0a 100%);
-        border: 1px solid rgba(211, 60, 68, 0.2);
-        border-radius: 16px;
-        position: relative;
-        overflow: hidden;
-    }
+    /* --- MAP & FOOTER --- */
+    .map-section { background: #111; border-top: 4px solid var(--red-accent); }
+    .map-container iframe { width: 100%; height: 350px; border: 0; display: block; filter: grayscale(100%) invert(90%) contrast(1.2); }
     
-    .cta-banner::before {
-        content: '';
-        position: absolute;
-        top: 0; right: 0;
-        width: 50%; height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(211, 60, 68, 0.1));
-        transform: skewX(-20deg);
-    }
+    .footer-section { background-color: #050505; padding-top: 70px; border-top: 1px solid #222; }
+    .footer-links li { margin-bottom: 12px; }
+    .footer-links a { color: rgba(255,255,255,0.7); text-decoration: none; transition: 0.3s; font-size: 0.95rem; }
+    .footer-links a:hover { color: var(--red-accent); padding-left: 5px; }
+    .footer-bottom { background-color: #000; padding: 20px 0; border-top: 1px solid #222; margin-top: 50px;}
 </style>
 
-<div class="about-hero text-center text-white">
-    <div class="about-hero-bg"></div>
-    <div class="container about-hero-content fade-in">
-        <span class="section-tag mx-auto d-table mb-3" style="letter-spacing: 3px;">Get To Know Us</span>
-        <h1 class="fw-bolder mb-4" style="font-size: 4rem; letter-spacing: -1px;">Driving Excellence in<br>Every Repair.</h1>
-        <p class="text-light opacity-75 mx-auto" style="max-width: 650px; font-size: 1.15rem; line-height: 1.8;">
-            We are more than just a repair shop. We are a team of passionate automotive experts dedicated to keeping you safe on the road with transparent, high-end service.
-        </p>
+<div class="top-bar text-white">
+    <div class="container d-flex justify-content-center justify-content-md-between flex-wrap gap-3">
+        <div><i class="fas fa-phone-alt me-2 text-danger"></i> Contact : <span id="top-phone">9842356799</span></div>
+        <div><i class="fas fa-envelope me-2 text-danger"></i> mechzoneautomotive.pvt.ltd@gmail.com</div>
+        <div><i class="fas fa-map-marker-alt me-2 text-danger"></i> <span id="top-location">Kanchipuram, Tamil Nadu - 631551</span></div>
     </div>
 </div>
 
-<div class="container py-5 my-5">
-    <div class="row align-items-center g-5">
-        <div class="col-lg-6 fade-in">
-            <div class="story-image-wrapper shadow-lg">
-                <img src="https://images.unsplash.com/photo-1530046339160-ce3e530c7d2f?auto=format&fit=crop&w=1000&q=80" alt="AutoWorks Garage">
-            </div>
+<nav class="main-nav">
+    <div class="container d-flex justify-content-between align-items-center">
+        <div class="nav-logo">
+            <span style="font-family: var(--font-heading); letter-spacing: -1px;">MZ</span>
         </div>
-        <div class="col-lg-6 fade-in" style="animation-delay: 0.2s;">
-            <span class="section-tag mb-2">Our Story</span>
-            <h2 class="section-title mb-4">Built on Trust, Fueled by Expertise</h2>
-            
-            <p class="text-light opacity-75 mb-4" style="line-height: 1.8; font-size: 1.05rem;">
-                Founded with a vision to revolutionize the auto repair industry, <strong>AutoWorks</strong> started as a single garage and has grown into a premier network of certified service centers. 
-            </p>
-            <p class="text-light opacity-75 mb-4" style="line-height: 1.8; font-size: 1.05rem;">
-                We noticed a massive gap in the market: drivers were tired of hidden fees, slow turnaround times, and lack of transparency. We built our business model to solve exactly that. Today, our proprietary digital workflow allows customers to approve quotes instantly and track their vehicles live in our bays.
-            </p>
-            
-            <div class="d-flex align-items-center mt-5 p-4 rounded" style="background-color: #151515; border-left: 4px solid var(--accent-red, #d33c44);">
-                <div class="me-4">
-                    <i class="fas fa-quote-left fa-3x" style="color: rgba(211, 60, 68, 0.3);"></i>
-                </div>
-                <div>
-                    <h5 class="text-white fw-bold mb-1">Our Mission</h5>
-                    <p class="text-muted small mb-0 lh-base">To provide absolute transparency, utilize elite-level diagnostics, and ensure zero compromises on the safety and performance of every vehicle we touch.</p>
-                </div>
-            </div>
+        <div class="nav-links d-none d-md-flex align-items-center">
+            <a href="/"><i class="fas fa-home me-1 text-danger"></i> HOME</a>
+            <a href="#about" style="color: var(--red-accent);"><i class="fas fa-users-cog me-1 text-danger"></i> ABOUT</a>
+            <a href="/#services"><i class="fas fa-cogs me-1 text-danger"></i> SERVICES</a>
+            <a href="/#contact"><i class="fas fa-calendar-alt me-1 text-danger"></i> BOOK APPOINTMENT</a>
         </div>
     </div>
-</div>
+</nav>
 
-<div class="stats-section py-5 my-5">
+<section class="page-hero">
+    <div class="container page-hero-content">
+        <h1 class="page-hero-title">ABOUT US</h1>
+        <div class="breadcrumb-text">HOME <span class="mx-2">/</span> ABOUT MECH ZONE</div>
+    </div>
+</section>
+
+<section class="about-page-intro" id="about">
     <div class="container">
-        <div class="row g-4">
-            <div class="col-md-6 col-lg-3">
-                <div class="stat-box">
-                    <div class="stat-number">15+</div>
-                    <div class="stat-label">Years of Experience</div>
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <div class="section-header text-start mb-4">
+                    <h6 class="section-sub text-start">/// WHO WE ARE ///</h6>
+                    <h2 class="section-title text-start">MECH ZONE AUTOMOTIVE PVT. LTD.</h2>
                 </div>
+                
+                <p class="highlight-text text-light">
+                    Welcome to MECH ZONE AUTOMOTIVE PVT. LTD., a trusted and growing automobile service brand based in Kanchipuram, Tamil Nadu, India (631551).
+                </p>
+                
+                <p class="text-light opacity-75 lh-lg mb-4">
+                    With a strong foundation built over <strong>30+ years of experience</strong>, we are committed to delivering high-quality automotive solutions for both personal and commercial vehicles.
+                </p>
+
+                <h4 class="font-heading fw-bold text-danger text-uppercase mb-3 mt-5">OUR LEGACY</h4>
+                <p class="text-light opacity-75 lh-lg">
+                    Our journey began as <strong>Sri Saravana Auto Works</strong>, a well-known service center that earned customer trust through dedication, skill, and consistent service quality. Today, we are evolving into <strong>MECH ZONE AUTOMOTIVE PVT. LTD.</strong>, a modern automotive brand with a vision to expand and innovate across the industry.
+                </p>
             </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="stat-box border-start border-dark">
-                    <div class="stat-number">25k</div>
-                    <div class="stat-label">Vehicles Repaired</div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="stat-box border-start border-dark">
-                    <div class="stat-number">40+</div>
-                    <div class="stat-label">Certified Experts</div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-3">
-                <div class="stat-box border-start border-dark">
-                    <div class="stat-number">100%</div>
-                    <div class="stat-label">Transparency</div>
+            
+            <div class="col-lg-6">
+                <div class="position-relative p-2 bg-dark d-inline-block w-100" style="border: 2px solid var(--red-accent);">
+                    <img src="https://i.pinimg.com/736x/e8/88/06/e88806cbd605e46cf5f623e491091b00.jpg" alt="Mech Zone Legacy" class="img-fluid w-100 opacity-75">
+                    <div class="position-absolute bottom-0 start-0 p-4 w-100" style="background: linear-gradient(transparent, rgba(0,0,0,0.9));">
+                        <h3 class="font-heading text-white fw-bold m-0">30+ YEARS OF EXCELLENCE</h3>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 
-<div class="container py-5 my-5">
-    <div class="text-center mb-5 pb-3">
-        <span class="section-tag mx-auto d-table mb-2">Why Choose Us</span>
-        <h2 class="section-title">Our Core Values</h2>
+<section class="py-5" style="background-color: #0a0a0a; border-top: 1px solid #222; border-bottom: 1px solid #222;">
+    <div class="container py-4">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="info-card">
+                    <i class="fas fa-eye info-icon"></i>
+                    <h3 class="info-title">OUR VISION</h3>
+                    <p class="text-light opacity-75 lh-lg mb-3">To become one of the leading automotive service brands in Tamil Nadu, known for:</p>
+                    <ul class="list-unstyled text-light opacity-75 lh-lg mb-0 small">
+                        <li><i class="fas fa-chevron-right text-danger me-2"></i> Advanced service technology</li>
+                        <li><i class="fas fa-chevron-right text-danger me-2"></i> Reliable and transparent work</li>
+                        <li><i class="fas fa-chevron-right text-danger me-2"></i> Customer-first approach</li>
+                        <li><i class="fas fa-chevron-right text-danger me-2"></i> High-quality standards</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="info-card">
+                    <i class="fas fa-bullseye info-icon"></i>
+                    <h3 class="info-title">OUR MISSION</h3>
+                    <p class="text-light opacity-75 lh-lg">
+                        To deliver reliable, affordable, and high-quality automotive services while building long-term relationships with our customers. Our team ensures every vehicle is handled with precision, care, and expertise.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="info-card" style="border-color: var(--red-accent); background: rgba(211, 60, 68, 0.05);">
+                    <i class="fas fa-network-wired info-icon text-white"></i>
+                    <h3 class="info-title text-danger">EXPANSION PLAN</h3>
+                    <p class="text-light opacity-75 lh-lg">
+                        We aim to expand <strong>MECH ZONE AUTOMOTIVE PVT. LTD.</strong> across Tamil Nadu through a robust franchise network, making professional and trusted automobile services accessible everywhere.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="art-services bg-overlay text-white">
+    <div class="container pt-3">
+        <div class="section-header">
+            <h6 class="section-sub">/// WHAT WE DO ///</h6>
+            <h2 class="section-title">OUR SERVICES</h2>
+            <p class="text-light opacity-75 mt-3">We offer a complete range of automobile services under one roof.</p>
+        </div>
+        
+        <div class="row g-4 mt-2">
+            <div class="col-md-6 col-lg-4">
+                <div class="art-box">
+                    <h4 class="font-heading fw-bold fs-6 text-uppercase text-white">Mechanical Repairs & Maintenance</h4>
+                    <p class="small text-light opacity-75 mt-3 mb-4 lh-lg">Complete engine diagnostics, routine maintenance, and complex mechanical overhauls.</p>
+                    <i class="fas fa-wrench art-icon"></i>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="art-box">
+                    <h4 class="font-heading fw-bold fs-6 text-uppercase text-white">Electrical & Wiring Solutions</h4>
+                    <p class="small text-light opacity-75 mt-3 mb-4 lh-lg">Advanced electrical diagnostics, wiring repairs, and modern technical solutions.</p>
+                    <i class="fas fa-car-battery art-icon"></i>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="art-box">
+                    <h4 class="font-heading fw-bold fs-6 text-uppercase text-white">Painting & Body Works</h4>
+                    <p class="small text-light opacity-75 mt-3 mb-4 lh-lg">Precision denting, scratch removal, and high-quality paint matching/correction.</p>
+                    <i class="fas fa-paint-roller art-icon"></i>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="art-box">
+                    <h4 class="font-heading fw-bold fs-6 text-uppercase text-white">Vehicle Restoration</h4>
+                    <p class="small text-light opacity-75 mt-3 mb-4 lh-lg">Including vintage and classic cars like the Ambassador. We bring old legends back to life.</p>
+                    <i class="fas fa-car-side art-icon"></i>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="art-box">
+                    <h4 class="font-heading fw-bold fs-6 text-uppercase text-white">Vehicle Modification & Customization</h4>
+                    <p class="small text-light opacity-75 mt-3 mb-4 lh-lg">Tailored body upgrades, performance enhancements, and interior customizations.</p>
+                    <i class="fas fa-cogs art-icon"></i>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="art-box">
+                    <h4 class="font-heading fw-bold fs-6 text-uppercase text-white">Commercial & Personal Vehicles</h4>
+                    <p class="small text-light opacity-75 mt-3 mb-4 lh-lg">Dedicated bays and specialized mechanics for all personal cars and commercial transport.</p>
+                    <i class="fas fa-truck art-icon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="why-us-bg bg-overlay text-white">
+    <div class="container">
+        <div class="row align-items-center mt-4">
+            <div class="col-lg-5 text-center position-relative mb-5 mb-lg-0">
+                <img src="https://images.unsplash.com/photo-1615906655593-ad0386982a0f?w=600&auto=format&fit=crop&q=60" class="position-relative" style="width:100%; max-width:400px; object-fit:cover; z-index: 2; border: 4px solid #111;" alt="Mechanic Quality">
+            </div>
+            
+            <div class="col-lg-7 ps-lg-5">
+                <div class="section-header text-center text-lg-start mb-5">
+                    <h6 class="section-sub text-lg-start">/// THE MECH ZONE ADVANTAGE ///</h6>
+                    <h2 class="section-title text-lg-start">WHY CHOOSE US?</h2>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="check-list-item">
+                            <i class="fas fa-check-circle"></i> 30+ Years Industry Experience
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="check-list-item">
+                            <i class="fas fa-check-circle"></i> Expertise in All Vehicle Types
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="check-list-item">
+                            <i class="fas fa-check-circle"></i> Specialists in Old & Classic Cars
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="check-list-item">
+                            <i class="fas fa-check-circle"></i> Highly Skilled Technicians
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="check-list-item">
+                            <i class="fas fa-check-circle"></i> Complete End-to-End Automotive Services
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="map-section">
+    <div class="container-fluid px-0">
+        <div class="map-container">
+            <iframe id="footer-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d124376.54924639965!2d79.6200230230238!3d12.836480838183023!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a52c2fceea56925%3A0x6fb284646700c025!2sKanchipuram%2C%20Tamil%20Nadu!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+    </div>
+</section>
+
+<footer class="footer-section">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-lg-4">
+                <h4 class="text-white font-heading fw-bold mb-4">MECH ZONE<br><span class="text-danger">AUTOMOTIVE PVT. LTD.</span></h4>
+                <p class="text-light opacity-75 small lh-lg pe-lg-4">Your trusted partner for all vehicle maintenance and repair needs. Delivering quality service with certified mechanics and premium parts.</p>
+                <div class="d-flex gap-3 mt-4">
+                    <a href="#" class="text-white opacity-75 fs-4 hover-danger"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="text-white opacity-75 fs-4 hover-danger"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-white opacity-75 fs-4 hover-danger"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            
+            <div class="col-lg-2 col-md-4">
+                <h5 class="text-white font-heading fw-bold mb-4 text-uppercase fs-6">Quick Links</h5>
+                <ul class="list-unstyled footer-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="/#services">Our Services</a></li>
+                    <li><a href="/#contact">Book Appointment</a></li>
+                </ul>
+            </div>
+            
+            <div class="col-lg-3 col-md-4">
+                <h5 class="text-white font-heading fw-bold mb-4 text-uppercase fs-6">Opening Hours</h5>
+                <ul class="list-unstyled text-light opacity-75 small lh-lg">
+                    <li class="d-flex justify-content-between border-bottom border-dark pb-2 mb-2"><span>Mon - Sun:</span> <span>8:00 AM - 5:30 PM</span></li>
+                    <li class="text-danger fw-bold mt-3 d-flex align-items-center"><i class="fas fa-truck-pickup me-2"></i> 24/7 Emergency Towing</li>
+                </ul>
+            </div>
+            
+            <div class="col-lg-3 col-md-4">
+                <h5 class="text-white font-heading fw-bold mb-4 text-uppercase fs-6">Contact Info</h5>
+                <ul class="list-unstyled text-light opacity-75 small lh-lg">
+                    <li class="mb-3 d-flex"><i class="fas fa-map-marker-alt text-danger me-3 mt-1"></i> <span id="footer-location">Kanchipuram, Tamil Nadu, India – 631551</span></li>
+                    <li class="mb-3 d-flex"><i class="fas fa-phone-alt text-danger me-3 mt-1"></i> <span id="footer-phone">9842356799</span></li>
+                    <li class="d-flex"><i class="fas fa-envelope text-danger me-3 mt-1"></i> mechzoneautomotive.pvt.ltd@gmail.com</li>
+                </ul>
+            </div>
+        </div>
     </div>
     
-    <div class="row g-4">
-        <div class="col-md-6 col-lg-4 fade-in">
-            <div class="value-card">
-                <div class="value-icon">
-                    <i class="fas fa-search-dollar"></i>
-                </div>
-                <h4 class="text-white fw-bold mb-3">Absolute Transparency</h4>
-                <p class="text-light opacity-50 small lh-lg mb-0">
-                    No hidden fees. No surprise charges. You receive a detailed digital quote to approve before we ever turn a wrench.
-                </p>
-            </div>
-        </div>
-        
-        <div class="col-md-6 col-lg-4 fade-in" style="animation-delay: 0.1s;">
-            <div class="value-card">
-                <div class="value-icon">
-                    <i class="fas fa-microchip"></i>
-                </div>
-                <h4 class="text-white fw-bold mb-3">Advanced Diagnostics</h4>
-                <p class="text-light opacity-50 small lh-lg mb-0">
-                    We use elite, OEM-level diagnostic computers to pinpoint exactly what your vehicle needs, eliminating guesswork.
-                </p>
-            </div>
-        </div>
-        
-        <div class="col-md-6 col-lg-4 fade-in" style="animation-delay: 0.2s;">
-            <div class="value-card">
-                <div class="value-icon">
-                    <i class="fas fa-gem"></i>
-                </div>
-                <h4 class="text-white fw-bold mb-3">Genuine Quality</h4>
-                <p class="text-light opacity-50 small lh-lg mb-0">
-                    We exclusively source high-quality, authentic parts designed specifically for your vehicle's make and model.
-                </p>
-            </div>
-        </div>
+    <div class="footer-bottom text-center">
+        <p class="small text-light opacity-50 mb-0">© 2024 MECH ZONE AUTOMOTIVE PVT. LTD. All Rights Reserved.</p>
     </div>
-</div>
-
-<div class="container pb-5 mb-5 fade-in">
-    <div class="cta-banner p-4 p-md-5 d-flex flex-column flex-lg-row align-items-center justify-content-between shadow-lg">
-        <div class="mb-4 mb-lg-0 text-center text-lg-start position-relative z-index-2">
-            <h3 class="fw-bolder text-white mb-2 text-uppercase">Ready to experience the difference?</h3>
-            <p class="text-light opacity-75 mb-0 fs-6" style="max-width: 600px; line-height: 1.6;">
-                Book your appointment today and let our certified experts take care of the rest.
-            </p>
-        </div>
-        <div class="position-relative z-index-2 d-flex gap-3">
-            <a href="{{ url_for('index') }}#appointment" class="btn btn-danger btn-lg fw-bold px-4 py-3 text-nowrap text-uppercase" style="border-radius: 8px; background-color: var(--accent-red, #d33c44); border: none;">
-                Book Appointment <i class="fas fa-arrow-right ms-2"></i>
-            </a>
-        </div>
-    </div>
-</div>
+</footer>
 
 {% endblock %}
