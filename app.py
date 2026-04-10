@@ -1,3 +1,4 @@
+import os
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from datetime import datetime
@@ -186,9 +187,20 @@ class Payment(db.Model):
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-change-this'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///car_service.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPI_ID'] = 'careservice@okhdfcbank'
+
+# Configure Database URL for Vercel/Render/Local
+raw_db_url = os.getenv('DATABASE_URL')
+if raw_db_url:
+    # 1. Cloud Postgres (Render, Supabase, etc)
+    app.config['SQLALCHEMY_DATABASE_URI'] = raw_db_url.replace("postgres://", "postgresql://", 1)
+elif os.environ.get('VERCEL'):
+    # 2. Vercel temporary SQLite (must be in /tmp)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/car_service.db'
+else:
+    # 3. Local Development
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///car_service.db'
 
 db.init_app(app)
 login_manager = LoginManager()
